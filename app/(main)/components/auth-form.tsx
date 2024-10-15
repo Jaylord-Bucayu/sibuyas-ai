@@ -100,7 +100,7 @@ export default function UserAuthForm() {
                   <Input
                     type="email"
                     placeholder="Enter your email..."
-                    disabled={loading}
+                    disabled={isLoading}
                     {...field}
                   />
                 </FormControl>
@@ -123,7 +123,7 @@ export default function UserAuthForm() {
                   <Input
                     type="password"
                     placeholder="Enter your password..."
-                    disabled={loading}
+                    disabled={isLoading}
                     {...field}
                   />
                 </FormControl>
@@ -136,7 +136,7 @@ export default function UserAuthForm() {
           />
 
   
-          <Button disabled={loading} className="ml-auto w-full" type="submit">
+          <Button disabled={isLoading} className="ml-auto w-full" type="submit">
             Sign in
           </Button>
         </form>

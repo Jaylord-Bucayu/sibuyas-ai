@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { DataTable } from "./data-table"
-import { UserNav } from "./user-nav"
 import {
   ResizableHandle,
   ResizablePanel,
@@ -18,7 +17,7 @@ interface TaskPageClientProps {
   columns: any[]
 }
 
-export function TaskPageClient({ tasks, columns }: TaskPageClientProps) {
+export function TaskPageClient({ tasks, columns }: any) {
   const [selectedItem, setSelectedItem] = useState<PredictionData | null>(null)
 
   const handleSelectedItemChange = (item: any | null) => {
@@ -27,18 +26,6 @@ export function TaskPageClient({ tasks, columns }: TaskPageClientProps) {
 
   return (
     <div className="hidden h-screen flex-1 flex-col p-2 md:flex w-full">
-      {/* <div className="flex items-center justify-between space-y-2">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-          <p className="text-muted-foreground">
-            Here&apos;s a list of your tasks for this month!
-          </p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <UserNav />
-        </div>
-      </div> */}
-
       <ResizablePanelGroup direction="horizontal" className="h-[calc(100vh-10rem)]">
         <ResizablePanel defaultSize={80} className="p-4"  max-size={98}>
           <ScrollArea className="h-[95vh] py-2">

@@ -1,6 +1,6 @@
 "use client"
 
-import { TrendingUp, TrendingDown,SearchCheck,SearchX  } from "lucide-react"
+import {SearchCheck,SearchX  } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts"
 
 import {
@@ -14,8 +14,6 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
@@ -46,12 +44,9 @@ export function DataChart({ predictions }: PredictionProps) {
     { category: "Good", value: parseFloat(predictions.GOOD) || 0 },
   ];
   
-  const totalPercentage = chartData.reduce((sum, item) => sum + item.value, 0);
+const totalPercentage = chartData.reduce((sum, item) => sum + item.value, 0);
 const highestValue = Math.max(chartData[0].value, chartData[1].value);
-
 const trend = totalPercentage >= 100 ? "up" : "down";
-const trendValue = Math.abs(totalPercentage - 100).toFixed(2);
-  
 
   return (
     <div>

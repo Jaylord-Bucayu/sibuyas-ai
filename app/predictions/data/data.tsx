@@ -72,7 +72,7 @@ import {
 
   export interface PredictionData {
     _id: string;
-    input: number[];
+    input: (string | number)[]; // Allow input values to be strings or numbers
     predictions: {
       BAD: string;
       GOOD: string;
