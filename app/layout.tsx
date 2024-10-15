@@ -37,8 +37,8 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-hidden`}
       >
         <Providers session={session}>
-        {children}
         <Toaster/>
+        {children}
         </Providers>
       </body>
     </html>
