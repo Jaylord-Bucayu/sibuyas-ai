@@ -37,8 +37,8 @@ export default function UserAuthForm() {
   const [loading, setLoading] = useState(false);
 
   const defaultValues = {
-    "email":"pattaguandna21s2@wgmail.com",
-    "password":"Abcd1234!"
+    "email":"",
+    "password":""
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
