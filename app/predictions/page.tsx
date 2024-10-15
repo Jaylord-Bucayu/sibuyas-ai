@@ -6,8 +6,8 @@ import { columns } from "./components/columns"
 import { taskSchema } from "./data/schema"  
 
 export const metadata: Metadata = {
-  title: "Tasks",
-  description: "A task and issue tracker build using Tanstack Table.",
+  title: "OnionGuard | Predictions",
+  description: "Predictions of Onions",
 }
 
 import { getCurrentUser } from "@/lib/session"
