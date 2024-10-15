@@ -34,7 +34,7 @@ const chartConfig = {
   },
   GOOD: {
     label: "Good",
-    color: "hsl(var(--success))",
+    color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig
 
@@ -94,7 +94,7 @@ const trend = totalPercentage >= 100 ? "up" : "down";
             />
             <Bar
               dataKey="value"
-              fill="var(--color-BAD)"
+              fill="var(--color-GOOD)"
               radius={[4, 4, 0, 0]}
             />
           </BarChart>

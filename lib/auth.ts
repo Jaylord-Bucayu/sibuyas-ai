@@ -11,11 +11,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any) {
-        
-     
         try {
-          console.log('Authorize function called');
-        console.log('Credentials:', credentials);
           const response = await axios.post(
             `https://ai-projects-backend.onrender.com/api/v1/auth/login`, // Fixed template literal syntax
             {
@@ -24,7 +20,7 @@ export const authOptions: NextAuthOptions = {
             }
           );
 
-          console.log("Login response:", response.data);
+          // console.log("Login response:", response.data);
 
           if (response.data) {
             return {
