@@ -59,15 +59,13 @@ export default function UserAuthForm() {
      callbackUrl: callbackUrl ?? '/predictions'
     });
 
-    console.log({signInResult})
 
   if (signInResult?.url) {
       router.push('/predictions')
     }
 
     setIsLoading(false);
-    console.log(signInResult)
-    alert('sd')
+    
     if (!signInResult?.ok || signInResult?.error) {
       return toast({
         title: "Something went wrong.",

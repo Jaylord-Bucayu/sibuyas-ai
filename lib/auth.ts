@@ -5,14 +5,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: "Credentials",
       credentials: {
         username: { label: "Username", type: "text" }, // Use 'username' in credentials
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any, req) {
-       
+        
+     
         try {
+          console.log('Authorize function called');
+        console.log('Credentials:', credentials);
           const response = await axios.post(
             `https://ai-projects-backend.onrender.com/api/v1/auth/login`, // Fixed template literal syntax
             {
@@ -40,13 +43,14 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
-     
+    async jwt({ token, user }:any) {
+      console.log({token,user})
       if (user) {
-        token.id = user.id; // Assuming user data structure from response
+        // token.id = user.id; // Assuming user data structure from response
         // token.role = user?.role;
         token.email = user.email;
-        // token.token = user?.token; // Storing JWT token
+        token.name = user.name;
+        token.token = user?.token; // Storing JWT token
       }
 
       return token;
@@ -55,13 +59,13 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }: any) {
      
       if (token) {
-        session.user.id = token.id;
+        // session.user.id = token.id;
         session.user.email = token.email;
         session.user.token = token.token;
-        session.user.firstName = token.firstName || ""; // Default empty if not available
-        session.user.lastName = token.lastName || "";
-        session.user.role = token.role;
-        session.user.picture = token.picture || ""; // Default empty if not available
+        session.user.name = token.name || ""; // Default empty if not available
+        // session.user.lastName = token.lastName || "";
+        // session.user.role = token.role;
+        // session.user.picture = token.picture || ""; // Default empty if not available
       }
 
       return session;
@@ -74,7 +78,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 1 * 24 * 60 * 60, // 1 day
   },
   pages: {
-    signIn: "/login",
+    signIn: "/",
   },
   debug: process.env.NODE_ENV === "development",
 };
