@@ -25,50 +25,41 @@ export function TaskPageClient({ tasks, columns }: any) {
   }
 
   return (
-    <div className="hidden h-screen flex-1 flex-col p-2 md:flex w-full">
-      <ResizablePanelGroup direction="horizontal" className="h-[calc(100vh-10rem)]">
-        <ResizablePanel defaultSize={80} className="p-4"  max-size={98}>
-          <ScrollArea className="h-[95vh] py-2">
+    <div className="flex flex-col w-full h-screen p-2 md:flex-row">
+    <div className="grid grid-cols-1 md:grid-cols-[3fr,2fr] gap-2 h-full w-full">
+      <div className="overflow-hidden mb-4 md:mb-0">
+        <ScrollArea className="h-[50vh] md:h-[95vh] py-2 px-4">
           <DataTable data={tasks} columns={columns} onSelectedItemChange={handleSelectedItemChange} />
-          </ScrollArea>
-          </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={50} max-size={30}>
-        <ScrollArea className="h-[90vh] py-2">
+        </ScrollArea>
+      </div>
+      <div className="overflow-hidden">
+        <ScrollArea className="h-[50vh] md:h-[95vh] py-2">
           {selectedItem ? (
             <div className="p-4">
-              {/* <h3 className="text-lg font-semibold mb-2">Selected Item Details</h3> */}
-              {/* <p>ID: {selectedItem._id}</p> 
-              <p>Input: {selectedItem.input}</p> */}
-              {/* <p>Model ID: {selectedItem.modelId}</p>
-              <p>Project ID: {selectedItem.projectId}</p> */}
-              {/* <p>Created At: {new Date(selectedItem.createdAt).toLocaleString()}</p>
-              <p>Updated At: {new Date(selectedItem.updatedAt).toLocaleString()}</p> */}
-              
-                <DataChart predictions={selectedItem.predictions}/>
-                <div className="bg-gray-900 text-gray-100 rounded-lg p-4">
-            <pre className="overflow-auto">
-                <code className="block whitespace-pre-wrap">
+              <DataChart predictions={selectedItem.predictions}/>
+              <div className="bg-gray-900 text-gray-100 rounded-lg p-4 mt-4">
+                <pre className="overflow-auto">
+                  <code className="block whitespace-pre-wrap text-sm">
                     <span className="text-blue-400">scanned</span> values <span className="text-pink-400">=</span> [<br />
                     {selectedItem.input.map((value, index) => (
-                        <React.Fragment key={index}>
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-400">{value}</span>{index < selectedItem.input.length - 1 ? ',' : ''}<br />
-                        </React.Fragment>
+                      <React.Fragment key={index}>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-400">{value}</span>{index < selectedItem.input.length - 1 ? ',' : ''}<br />
+                      </React.Fragment>
                     ))}
                     ];
-                </code>
-            </pre>
-        </div>
-
+                  </code>
+                </pre>
+              </div>
             </div>
           ) : (
             <div className="flex items-center justify-center h-full">
               <p className="text-muted-foreground">Select an item to view details</p>
             </div>
+            
           )}
-          </ScrollArea>
-        </ResizablePanel>
-      </ResizablePanelGroup>
+        </ScrollArea>
+      </div>
     </div>
+  </div>
   )
 }
