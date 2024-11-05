@@ -8,8 +8,7 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({ req });
     const { pathname } = req.nextUrl;
 
-    if (!token) {
-      console.log({token})
+    if (!token && pathname === '/predictions') {
       return NextResponse.redirect(new URL('/', req.url));
     }
     // If the user is logged in and tries to visit the login page, redirect to /predictions
