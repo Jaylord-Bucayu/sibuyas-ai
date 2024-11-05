@@ -1,4 +1,12 @@
 'use client';
+
+import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useToast } from "@/hooks/use-toast"
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -9,148 +17,108 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
-import { useSearchParams,useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import React from 'react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' }),
   password: z.string().nonempty({ message: 'Enter a valid password' })
 });
 
-
-
-import { useToast } from "@/hooks/use-toast"
-
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-
-    const { toast } = useToast()
-
+  const { toast } = useToast()
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl');
-  const [loading, setLoading] = useState(false);
+  const callbackUrl = searchParams.get('callbackUrl') || '/predictions';
+  const [isLoading, setIsLoading] = useState(false);
 
-  const defaultValues = {
-    "email":"",
-    "password":""
-  };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues
+    defaultValues: {
+      email: "",
+      password: ""
+    }
   });
 
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  
-  const router = useRouter();
-  
-  async function onSubmit(data: any) {
+  async function onSubmit(data: UserFormValue) {
     setIsLoading(true);
 
-    const signInResult = await signIn("credentials", {
-      email: data.email.toLowerCase(),
-      password: data.password,
-      redirect: false,
-     callbackUrl: callbackUrl ?? '/predictions'
-    });
-   
-  if (signInResult?.url) {
-      router.push('/predictions')
-    }
+    try {
+      const result = await signIn("credentials", {
+        email: data.email.toLowerCase(),
+        password: data.password,
+        redirect: false,
+        callbackUrl: callbackUrl
+      });
 
-    setIsLoading(false);
-    
-    if (!signInResult?.ok || signInResult?.error) {
-      return toast({
-        title: "Something went wrong.",
-        description: signInResult?.error,
+      if (result?.error) {
+        toast({
+          title: "Authentication failed",
+          description: result.error,
+          variant: "destructive",
+        });
+      } else if (result?.url) {
+        toast({
+          title: "Login Successful",
+          description: "Redirecting...",
+        });
+        window.location.href = result.url;
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
-
-    router.refresh();
-
-    return toast({
-      title: "Login Successful",
-      description: "Successfully Logged In!",
-    });
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full space-y-2"
-        >
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <>
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email..."
-                    disabled={isLoading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="Enter your email..."
+                  disabled={isLoading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            
-              </>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter your password..."
+                  disabled={isLoading}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-<FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <>
-             <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password..."
-                    disabled={isLoading}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-
-            
-              </>
-            )}
-          />
-
-  
-          <Button disabled={isLoading} className="ml-auto w-full" type="submit">
-            Sign in
-          </Button>
-        </form>
-      </Form>
-      {/* <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
-      </div> */}
-      {/* <GithubSignInButton /> */}
-    </>
+        <Button disabled={isLoading} className="w-full" type="submit">
+          {isLoading ? 'Signing in...' : 'Sign in'}
+        </Button>
+      </form>
+    </Form>
   );
 }
