@@ -55,12 +55,13 @@ export default function UserAuthForm() {
     const signInResult = await signIn("credentials", {
       email: data.email.toLowerCase(),
       password: data.password,
-      redirect: false,
+      redirect: true,
      callbackUrl: callbackUrl ?? '/predictions'
     });
 
 
   if (signInResult?.url) {
+   console.log('ok')
       router.push('/predictions')
     }
 
