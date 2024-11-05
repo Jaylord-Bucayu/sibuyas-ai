@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/', req.url));
     }
     // If the user is logged in and tries to visit the login page, redirect to /predictions
-    if (token && pathname === '/') {
+    if (token) {
       return NextResponse.redirect(new URL('/predictions', req.url));
     }
 
